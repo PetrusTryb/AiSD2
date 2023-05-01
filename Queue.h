@@ -42,7 +42,7 @@ public:
 		delete temp;
 		return data;
 	}
-	int Count() {
+	int Count() const{
 		return count;
 	}
 	void Clear() {

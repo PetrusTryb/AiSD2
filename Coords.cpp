@@ -3,43 +3,22 @@
  Coords::Coords() {
     x = 0;
     y = 0;
-    depth = 0;
 }
 
  Coords::Coords(int x, int y) {
     this->x = x;
     this->y = y;
-    depth = 0;
 }
 
- Coords::Coords(int x, int y, int depth) {
-    this->x = x;
-    this->y = y;
-    this->depth = depth;
-}
-
- bool Coords::operator==(Coords& c)
- {
+ bool Coords::operator==(Coords& c) const {
          return x == c.x && y == c.y;
  }
 
- bool Coords::operator!=(Coords& c)
- {
+ bool Coords::operator!=(Coords& c) const {
      return x != c.x || y != c.y;
  }
 
- Coords Coords::operator+(const Coords& c)
- {
+ Coords Coords::operator+(const Coords& c) const {
      return Coords(x + c.x, y + c.y);
- }
-
- String Coords::toString()
- {
-     String s = "(";
-     s += x;
-     s += ",";
-     s += y;
-     s += ")";
-     return s;
  }
 

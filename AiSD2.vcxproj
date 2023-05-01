@@ -132,7 +132,6 @@
     <ClCompile Include="Coords.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="HashTable.cpp" />
-    <ClCompile Include="List.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Queue.cpp" />
   </ItemGroup>
@@ -141,7 +140,6 @@
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="HashTable.h" />
-    <ClInclude Include="List.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Queue.h" />
   </ItemGroup>

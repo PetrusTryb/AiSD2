@@ -6,10 +6,10 @@ class PriorityQueue
 	private:
 		struct Node
 		{
-		int priority;
-		T data;
-		Node* next;
-	};
+			int priority;
+			T data;
+			Node* next;
+		};
 	Node* head;
 	int count;
 public:
@@ -46,7 +46,7 @@ public:
 		delete temp;
 		return data;
 	}
-	int Count() {
+	int Count() const{
 		return count;
 	}
 	void Clear() {
