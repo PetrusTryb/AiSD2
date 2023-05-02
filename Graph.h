@@ -26,6 +26,7 @@ public:
     ~Graph();
     void AddCity(String& cityName, Coords& location);
     void AddAnonymousCity(Coords& location);
+    void PrepareForAddingFlights();
     void AddFlight(String& from, String& to, int time);
     void AddFlight(int& from, int& to, int time);
     void AddFlight(Coords& from, Coords& to, int time);

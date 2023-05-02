@@ -1,62 +1,79 @@
 #pragma once
-#include <stdio.h>
 template <class T>
 class PriorityQueue
 {
-	private:
-		struct Node
-		{
-			int priority;
-			T data;
-			Node* next;
-		};
-	Node* head;
-	int count;
+private:
+	T* heap;
+	int* priorities;
+	int capacity;
+	void Swap(int i, int j) {
+		T temp = heap[i];
+		heap[i] = heap[j];
+		heap[j] = temp;
+		int temp2 = priorities[i];
+		priorities[i] = priorities[j];
+		priorities[j] = temp2;
+	}
+	void BubbleUp(int index) {
+		if (index == 0)
+			return;
+		int parent = (index - 1) / 2;
+		if (priorities[index] < priorities[parent]) {
+			Swap(index, parent);
+			BubbleUp(parent);
+		}
+	}
+	void BubbleDown(int index) {
+		int left = index * 2 + 1;
+		int right = index * 2 + 2;
+		if (left >= count)
+			return;
+		int min = left;
+		if (right < count && priorities[right] < priorities[left])
+			min = right;
+		if (priorities[index] > priorities[min]) {
+			Swap(index, min);
+			BubbleDown(min);
+		}
+	}
 public:
+	int count;
 	PriorityQueue() {
-		head = nullptr;
 		count = 0;
+		capacity = 1000;
+		heap = new T[capacity]{};
+		priorities = new int[capacity] {};
 	}
 	~PriorityQueue() {
-		Clear();
+		delete[] heap;
+		delete[] priorities;
 	}
-	void Enqueue(T data, int priority) {
-		Node* temp = new Node;
-		temp->data = data;
-		temp->priority = priority;
-		temp->next = nullptr;
-		if (head == nullptr) {
-			head = temp;
-		}
-		else {
-			Node* current = head;
-			while (current->next != nullptr && current->next->priority < priority) {
-				current = current->next;
+	void Insert(T& data, int priority) {
+		if (count == capacity) {
+			T* temp = new T[capacity * 2]{};
+			int* temp2 = new int[capacity * 2] {};
+			for (int i = 0; i < capacity; i++) {
+				temp[i] = heap[i];
+				temp2[i] = priorities[i];
 			}
-			temp->next = current->next;
-			current->next = temp;
+			delete[] heap;
+			delete[] priorities;
+			heap = temp;
+			priorities = temp2;
+			capacity *= 2;
 		}
+		heap[count] = data;
+		priorities[count] = priority;
+		BubbleUp(count);
 		count++;
 	}
-	T Dequeue() {
+	T Pop() {
+		T temp = heap[0];
+		heap[0] = heap[count - 1];
+		priorities[0] = priorities[count - 1];
 		count--;
-		Node* temp = head;
-		head = head->next;
-		T data = temp->data;
-		delete temp;
-		return data;
-	}
-	int Count() const{
-		return count;
-	}
-	void Clear() {
-		while (head) {
-			Node* temp = head;
-			head = head->next;
-			delete temp;
-		}
-		count = 0;
-		head = nullptr;
+		BubbleDown(0);
+		return temp;
 	}
 };
 

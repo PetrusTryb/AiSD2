@@ -11,10 +11,7 @@ Graph::Graph(int w, int h) {
     VIDToCity.Resize(float(w * h) / 1.99);
     CoordsToVID = new int* [height];
     for (int i = 0; i < height; i++) {
-        CoordsToVID[i] = new int[width];
-        for (int j = 0; j < width; j++) {
-            CoordsToVID[i][j] = -1;
-        }
+        CoordsToVID[i] = new int[width] {-1};
     }
 }
 
@@ -33,14 +30,19 @@ void Graph::AddCity(String& cityName, Coords& location) {
 
 void Graph::AddAnonymousCity(Coords& location) {
     VIDToCity[citiesCount].location = location;
-    VIDToCity[citiesCount].name = "@";
+    VIDToCity[citiesCount].name = "";
     CoordsToVID[location.y][location.x] = citiesCount;
     citiesCount++;
 }
 
-void Graph::AddFlight(String& from, String& to, int time) {
-    if (adjList.Size() == 0)
+void Graph::PrepareForAddingFlights()
+{
+    if (adjList.Size() == 0) {
         adjList.Resize(citiesCount);
+    }
+}
+
+void Graph::AddFlight(String& from, String& to, int time) {
     int fromVID = CityNameToVID[from];
     int toVID = CityNameToVID[to];
     Flight flight;
@@ -60,15 +62,14 @@ void Graph::AddFlight(int& from, int& to, int time) {
 }
 
 void Graph::AddFlight(Coords& from, Coords& to, int time) {
-    if (adjList.Size() == 0) {
-        adjList.Resize(citiesCount);
-    }
+    
     int fromVID = CoordsToVID[from.y][from.x];
     int toVID = CoordsToVID[to.y][to.x];
     AddFlight(fromVID, toVID, time);
 }
 
 void Graph::PrintShortestPath(String& from, String& to, bool verbose) {
+    //printf("From: %s\nTo: %s\n", from.ToValidString(), to.ToValidString());
     int fromVID = CityNameToVID[from];
     int toVID = CityNameToVID[to];
     Coords start = VIDToCity[fromVID].location;
@@ -78,33 +79,43 @@ void Graph::PrintShortestPath(String& from, String& to, bool verbose) {
         printf("0\n");
         return;
     }
-    Array<int> dist(citiesCount);
-    Array<int> prev(citiesCount);
+    int* dist = new int[citiesCount];
+    int* prev = new int[citiesCount];
     for (int i = 0; i < citiesCount; i++) {
-        dist[i] = INT_MAX / 2;
+        dist[i] = INT_MAX - 1;
         prev[i] = -1;
     }
     dist[fromVID] = 0;
     PriorityQueue<int> pq;
-    pq.Enqueue(fromVID, 0);
-    while (pq.Count()) {
-        int u = pq.Dequeue();
-        int limit = adjList[u].Size();
-        for (int i = 0; i < limit; i++) {
-            Flight& flight = adjList[u][i];
-            int v = flight.destination;
-            int alt = dist[u] + flight.time;
-            if (alt < dist[v]) {
-                dist[v] = alt;
-                prev[v] = u;
-                pq.Enqueue(v, alt);
-            }
+    pq.Insert(fromVID, 0);
+    int v;
+    int alt;
+    int u;
+    int limit;
+    Flight* flight;
+    int i;
+    while (pq.count) {
+        u = pq.Pop();
+        limit = adjList[u].currentLenght;
+        //printf("Limit: %ld", limit);
+        //printf("PQ Count: %d\n", pq.Count());
+        for (i = 0; i < limit; ++i) {
+            flight = &adjList[u][i];
+            v = flight->destination;
+            alt = dist[u] + flight->time;
+            if (alt >= dist[v]-50)
+                continue;
+            dist[v] = alt;
+            prev[v] = u;
+            pq.Insert(v, alt);
         }
     }
     printf("%d", dist[toVID]);
     int current = toVID;
-    if (!verbose||CityNameToVID.Count()<=2) {
+    if (!verbose || CityNameToVID.Count() <= 2) {
         printf("\n");
+        delete[] dist;
+        delete[] prev;
         return;
     }
     Array<int> path;
@@ -113,8 +124,10 @@ void Graph::PrintShortestPath(String& from, String& to, bool verbose) {
         current = prev[current];
     }
     for (int i = path.Size() - 2; i > 0; i--) {
-            if (VIDToCity[path[i]].name[0] != '@')
-                printf(" %s", VIDToCity[path[i]].name.ToValidString());
+        if (VIDToCity[path[i]].name.Size() > 0)
+            printf(" %s", VIDToCity[path[i]].name.ToValidString());
     }
     printf("\n");
+    delete[] dist;
+    delete[] prev;
 }

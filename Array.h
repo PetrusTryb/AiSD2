@@ -5,9 +5,9 @@ class Array {
 private:
     int ARRAY_BLOCK_SIZE = 10;
     V* data = nullptr;
-    int currentLenght;
     int maxLenght;
 public:
+    int currentLenght;
     Array() {
         data = new V[ARRAY_BLOCK_SIZE]{};
         maxLenght = ARRAY_BLOCK_SIZE;
@@ -50,31 +50,6 @@ public:
         return *this;
     }
 
-    void operator+=(int i) {
-        if (i == 0) {
-            Add('0');
-            return;
-        }
-        Array temp;
-        while (i > 0) {
-            temp.Add((i % 10) + '0');
-            i /= 10;
-        }
-        for (int i = temp.Size() - 1; i >= 0; i--) {
-            Add(temp[i]);
-        }
-    }
-
-    void operator+=(char& c) {
-        Add(c);
-    }
-
-    void operator+=(const Array& arr) {
-        for (int i = 0; i < arr.Size(); i++) {
-            Add(arr[i]);
-        }
-    }
-
     ~Array() {
         delete[] data;
     }
@@ -94,8 +69,6 @@ public:
     }
 
     V& operator[](const int index) const {
-        if (index < 0 || index >= currentLenght)
-            throw - 1;
         return data[index];
     }
 
@@ -134,8 +107,6 @@ public:
     }
 
     void Resize(int size) {
-		if (size < 0)
-			throw - 3;
         V* temp = new V[size]{};
         for (int i = 0; i < currentLenght && i < size; i++) {
 			temp[i] = data[i];
