@@ -4,8 +4,6 @@
 #include "Coords.h"
 #include "Graph.h"
 
-using namespace std;
-
 String read() {
     String str;
     char c = '_';
@@ -101,9 +99,7 @@ int main()
         dest = read();
         int time = read().ToInt();
         graph.AddFlight(loc, dest, time);
-        //printf("%s -> %s: %d\n", loc.ToValidString(), dest.ToValidString(), time);
     }
-    //graph.ParseAdjMatrix(map);
     int queries = read().ToInt();
     for (int i = 0; i < queries; i++) {
         loc = read();
