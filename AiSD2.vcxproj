@@ -133,7 +133,6 @@
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
-    <ClCompile Include="Queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
@@ -141,7 +140,6 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="PriorityQueue.h" />
-    <ClInclude Include="Queue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
